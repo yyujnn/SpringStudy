@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<!-- 타임리프를 사용하기 위해서 해줘야하는 작업 : 스키마 잡아주는 작업 -->
+<html xmlns:th = "https://www.thymeleaf.org/">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h1>게시판입니다!</h1>
+	<table border = '1'>
+		<tr>
+			<th>게시글 번호</th>
+	         <th>제목</th>
+	         <th>작성자</th>
+	         <th>작성일</th>
+	         <th>비고</th>
+		</tr>
+		
+		<!-- thymeleaf : 태그의 속성을 기준으로 동작 -->
+		<!-- ${list} : thymeleaf에서는 request scope에 있는 데이터만 가져올 수 있다 -->
+		<!-- ${session.list} -->
+		<tr th:each = "vo:${list}">  <!-- list를 vo에 담아줌 -->
+			<!-- Front개발자를 위한 prototype 제작에 효과적이다. -->
+			<td th:text="${vo.num}">글번호</td>
+			<td th:text="${vo.title}">제목</td>
+			<td th:text="${vo.writer}">작성자</td>
+			<td th:text="${vo.indate}">작성일</td>
+			<td>
+				<button th:attr="onclick=|location.href='delete?num=${vo.num}'|">삭제</button>
+			</td>
+		</tr>
+		
+		<tr>
+			<td colspan="5">
+				<button  onclick = "location.href='insert'">글쓰기</button>
+			</td>
+		</tr>
+		
+	</table>
+</body>
+</html>

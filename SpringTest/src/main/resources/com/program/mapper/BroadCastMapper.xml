@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace ="com.program.mapper.BroadCastMapper">
+<!-- namespace : mybatis에서의 역할 + Spring 반드시 DAO의 명칭과 맞춰줘야 한다. -->
+	
+	<!-- 조회한 결과값의 column명과 객체의 필드와 매칭 시키고 싶을 때 사용하는 resultMap -->
+	<resultMap type="com.program.entity.Music" id="test">
+		<result column="DE" property="brdcst_de"/>
+		<result column="RT" property="wtchng_rt"/>
+		<!-- 객체의 field : 속성, property -->
+	</resultMap>
+
+	<!-- 동적 Query -->
+	<!-- attribute 기준으로 객체의 필드에 접근할 때는 바로 명칭을 불러주면 된다! -->
+	<!-- SQL 구문 기준으로 객체의 필드에 접근할 때는 /#{} 반드시 써주기 -->
+	<sql id="searchOption">
+		<if test="type == '방송제목'">
+			WHERE PROGRAM_NM LIKE CONCAT('%',#{content},'%')
+		</if>	
+		<if test="type == 'MC 이름'">
+			WHERE FIXING_CAST_NM LIKE CONCAT('%',#{content},'%')
+		</if>
+		<if test="type == null">
+			WHERE PROGRAM_NM='뮤직뱅크' 
+		</if>
+	</sql>
+	
+
+	<!-- 남/여/전체 평균 시청률 조회 -->
+	<select id="getRatingData" 
+			parameterType="com.program.entity.SearchCriteria" 
+			resultType="com.program.entity.Music">
+		SELECT PROGRAM_NM,
+			   ROUND(AVG(MALE_RT),3)AS MALE_RT , 	
+		       ROUND(AVG(FEMALE_RT),3) AS FEMALE_RT , 
+		       ROUND(AVG(WTCHNG_RT),3) AS WTCHNG_RT
+		FROM MUSIC
+		<include refid="searchOption"/>
+		GROUP BY PROGRAM_NM
+	</select>
+	
+	<!-- 월별 평균 시청률 조회 -->
+	<select id="getMonthData" resultMap="test" >
+		SELECT MONTH(BRDCST_DE) AS DE , 
+		       ROUND(AVG(WTCHNG_RT),3) AS RT
+		FROM MUSIC
+		WHERE PROGRAM_NM=#{name}
+		GROUP BY DE
+	</select>
+	
+	<!-- 연령대별 평균 시청률 조회 -->
+	<select id="getAgeData" resultType="com.program.entity.Music">
+		SELECT  ROUND(AVG(N10S_RT),3) AS N10S_RT,
+				ROUND(AVG(N20S_RT),3) AS N20S_RT,
+				ROUND(AVG(N30S_RT),3) AS N30S_RT,
+				ROUND(AVG(N40S_RT),3) AS N40S_RT,
+				ROUND(AVG(N50S_RT),3) AS N50S_RT,
+				ROUND(AVG(N60S_ABOVE_RT),3) AS N60S_ABOVE_RT
+		FROM MUSIC
+		WHERE PROGRAM_NM=#{name} 
+	</select>
+	
+
+	
+	
+
+
+
+	
+	
+	
+
+
+
+
+
+
+</mapper>

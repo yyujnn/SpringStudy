@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace ="com.board.mapper.BoardMapper">
+<!-- namespace : mybatis에서의 역할 + Spring 반드시 DAO의 명칭과 맞춰줘야 한다. -->
+
+	<!-- 1) 전체 게시물 조회 -->
+	<!-- 반드시 id값과 DAO의 메소드명을 일치시키자!! -->
+	<select id="getBoardList" resultType="com.board.entity.Board">
+		SELECT * FROM BOARD
+		ORDER BY NUM DESC
+	</select>
+	
+	<!-- 2) 게시글 추가 -->
+	<insert id="register" parameterType="com.board.entity.Board">
+		INSERT INTO
+		BOARD(TITLE, WRITER, CONTENT)
+		VALUES(#{title}, #{writer}, #{content})
+	</insert>
+	
+	
+
+
+
+
+
+
+</mapper>
